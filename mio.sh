@@ -6,6 +6,8 @@
 # funzionalita' tanto BANALI.
 # sand <daniel@spatof.org> - Ottobre 2009
 
+# in zsh il primo elemento di un array e' 1, con questa opzione
+# diventa 0, pero' cambia sintassi: $array[0] diventa ${array[0]}
 setopt KSH_ARRAYS
 
 # CONFIG
@@ -53,42 +55,74 @@ daytime=(
     "sera tardi"
 )
 
+settimana=(
+    "Inizio settimana"
+    "Meta' settimana"
+    "Fine della settimana"
+    "Weekend!"
+)
+
 # MAIN()
 ore=$(date +%H)
 minuti=$(date +%M)
+giorno=$(date +%w)
 sector=0
 
-if [[ $fuzzyness == 1 || $fuzzyness == 2 ]]; then
-    if [[ $fuzzyness == 1 ]]; then
-	if (( $minuti > 2 )); then
-	    ((sector = (minuti - 3 ) / 5 + 1))
+parse_options() {
+    o_fuzzyness=(-f 1)
+
+    zparseopts -K -- f:=o_fuzzyness h=o_help
+    if [[ $? != 0 || "$o_help" != "" ]]; then
+	echo Usage: $(basename "$0") "[-f fuzzyness level]"
+	exit 1
+    fi
+
+    fuzzyness=${o_fuzzyness[1]}
+}
+
+fuzzyClock() {
+    fuzzyness=$1
+
+    if (( $fuzzyness == 1 || $fuzzyness == 2 )); then
+	if (( $fuzzyness == 1 )); then
+	    if (( $minuti > 2 )); then
+		((sector = (minuti - 3 ) / 5 + 1))
+	    fi
+	else
+	    if (( $minuti > 6 )); then
+		((sector = ((minuti - 7) / 15 + 1) * 3))
+	    fi
 	fi
+
+	[[ ${nomiMinuti[$sector]} =~ "%[0-9]" ]]
+	delta=${MATCH:s/%//}
+
+	if (( (($ore + $delta) % 12 ) > 0 )); then
+	    ((realhour = (ore + delta) % 12 - 1))
+	else
+	    ((realhour = 12 - ((ore + delta) % 12 + 1)))
+	fi
+
+	sub="%[0-9]"
+	fuzzyTime=${${nomiMinuti[$sector]}/${~sub}/${nomiOre[$realhour]}}
+
+    elif (( $fuzzyness == 3 )); then
+	fuzzyTime=${daytime[(($ore / 3))]}
+
     else
-	if (( $minuti > 6 )); then
-	    ((sector = ((minuti - 7) / 15 + 1) * 3))
+	if (( $giorno == 1 )); then
+	    fuzzyTime=${settimana[0]}
+	elif (( $giorno >= 2 && $giorno <= 4 )); then
+	    fuzzyTime=${settimana[1]}
+	elif [[ $giorno == 5 ]]; then
+	    fuzzyTime=${settimana[2]}
+	else
+	    fuzzyTime=${settimana[3]}
 	fi
     fi
 
-    [[ ${nomiMinuti[$sector]} =~ "%[0-9]" ]]
-    delta=${MATCH:s/%//}
+    print $fuzzyTime
+}
 
-    if (( (($ore + $delta) % 12 ) > 0 )); then
-	((realhour = (ore + delta) % 12 - 1))
-    else
-	((realhour = 12 - ((ore + delta) % 12 + 1)))
-    fi
-
-    timeString=${nomiMinuti[$sector]}
-    hourName=${nomiOre[$realhour]}
-    sub="%[0-9]"
-    #fuzzyTime=${timeString/${~sub}/$hourName}
-    fuzzyTime=${${nomiMinuti[$sector]}/${~sub}/${nomiOre[$realhour]}}
-
-elif [[ $fuzzyness == 3 ]]; then
-    fuzzyTime=${daytime[(($ore / 3))]}
-
-else
-    fuzzyTime="stocazzo"
-fi
-
-print $fuzzyTime
+parse_options $*
+fuzzyClock $fuzzyness

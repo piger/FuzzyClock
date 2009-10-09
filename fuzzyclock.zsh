@@ -1,9 +1,14 @@
 #!/usr/bin/env zsh
-# Fuzzyclock.zsh 1.1
-# Un orologio approssimativo localizzato parzialmente in romanaccio.
+# Fuzzyclock.zsh 1.2
+# Un orologio approssimativo localizzato in romanaccio.
 # Trattasi di porting dello script python FuzzyClock, dall'idea
 # dell'applet per OS X FuzzyClock. Riscritto in zsh per "ottimizzare".
 # Daniel Kertesz <daniel@spatof.org> - Ottobre 2009
+#
+# ChangeLog:
+# 1.0 - Prima versione apparentemente funzionante.
+# 1.1 - Pulizia codice e fix minori.
+# 1.2 - Migliorata la traduzione in romanaccio.
 
 # in zsh il primo elemento di un array e' 1, con questa opzione
 # diventa 0, pero' cambia sintassi: $array[0] diventa ${array[0]}.
@@ -36,7 +41,7 @@ nomiOre=(
     "e tre"
     "e quattro"
     "e cinque"
-    "e sei"
+    "'e sei"
     "e sette"
     "l'otto"
     "e nove"
@@ -45,21 +50,21 @@ nomiOre=(
     "a mezza"
 )
 
-daytime=(
-    "notte"
-    "madina presto"
-    "madina"
-    "quasi la mezza"
-    "la mezza"
-    "pomeriggio"
-    "sera"
-    "sera tardi"
+giornata=(
+    "E' svario tardi"
+    "E' madina presto"
+    "E' madina"
+    "E' quasi la mezza"
+    "E' mezzoggiorno"
+    "E' pomeriggio"
+    "Er crepuscolo"
+    "E' nnotte"
 )
 
 settimana=(
-    "Inizio settimana"
-    "Meta' settimana"
-    "Fine della settimana"
+    "L'inizio de sta settimana demmerda"
+    "In mezzo a sta cazzo de settimana"
+    "Sta settimana demmerda che sta a fini'"
     "Weekend!"
 )
 
@@ -113,7 +118,7 @@ fuzzyClock() {
 	fuzzyTime=${${nomiMinuti[$sector]}/${~sub}/${nomiOre[$realhour]}}
 
     elif (( $fuzzyness == 3 )); then
-	fuzzyTime=${daytime[(($ore / 3))]}
+	fuzzyTime=${giornata[(($ore / 3))]}
 
     else
 	if (( $giorno == 1 )); then

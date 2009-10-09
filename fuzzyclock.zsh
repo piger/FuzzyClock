@@ -1,18 +1,19 @@
 #!/usr/bin/env zsh
-# vim: ft=zsh
-# Eseguito il porting da uno script in python, a sua volta
-# portato da chissa' cosa, etc etc.
-# Mi sembra ASSURDO chiamare l'interprete python per delle
-# funzionalita' tanto BANALI.
-# sand <daniel@spatof.org> - Ottobre 2009
+# Fuzzyclock.zsh 1.1
+# Un orologio approssimativo localizzato parzialmente in romanaccio.
+# Trattasi di porting dello script python FuzzyClock, dall'idea
+# dell'applet per OS X FuzzyClock. Riscritto in zsh per "ottimizzare".
+# Daniel Kertesz <daniel@spatof.org> - Ottobre 2009
 
 # in zsh il primo elemento di un array e' 1, con questa opzione
-# diventa 0, pero' cambia sintassi: $array[0] diventa ${array[0]}
+# diventa 0, pero' cambia sintassi: $array[0] diventa ${array[0]}.
 setopt KSH_ARRAYS
 
-# CONFIG
-fuzzyness=1	# valori possibili: 1, 2, 3, 4
+# CONFIGURAZIONE
+default_fuzzyness=1	# valori possibili: 1-4
 
+# %0 viene sostituito con l'ora attuale,
+# %1 con l'ora successiva.
 nomiMinuti=(
     "%0 spaccate"
     "%0 eccinque"
@@ -63,17 +64,18 @@ settimana=(
 )
 
 # MAIN()
-ore=$(date +%H)
-minuti=$(date +%M)
-giorno=$(date +%w)
+timearray=${(z)$(date +"%H %M %w")}
+ore=${timearray[0]}
+minuti=${timearray[1]}
+giorno=${timearray[2]}
 sector=0
 
 parse_options() {
-    o_fuzzyness=(-f 1)
+    o_fuzzyness=(-f $default_fuzzyness)
 
     zparseopts -K -- f:=o_fuzzyness h=o_help
     if [[ $? != 0 || "$o_help" != "" ]]; then
-	echo Usage: $(basename "$0") "[-f fuzzyness level]"
+	echo Usage: $(basename "$0") "[-f fuzzyness level] [-h]"
 	exit 1
     fi
 
@@ -81,8 +83,6 @@ parse_options() {
 }
 
 fuzzyClock() {
-    fuzzyness=$1
-
     if (( $fuzzyness == 1 || $fuzzyness == 2 )); then
 	if (( $fuzzyness == 1 )); then
 	    if (( $minuti > 2 )); then
@@ -131,4 +131,4 @@ fuzzyClock() {
 }
 
 parse_options $*
-fuzzyClock $fuzzyness
+fuzzyClock

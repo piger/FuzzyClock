@@ -1,4 +1,4 @@
-#!/opt/local/bin/zsh
+#!/usr/bin/env zsh
 # vim: ft=zsh
 # Eseguito il porting da uno script in python, a sua volta
 # portato da chissa' cosa, etc etc.
@@ -101,6 +101,12 @@ fuzzyClock() {
 	    ((realhour = (ore + delta) % 12 - 1))
 	else
 	    ((realhour = 12 - ((ore + delta) % 12 + 1)))
+	fi
+
+	# WORKAROUNDS
+	# "l'una spaccate" -> "l'una precisa"
+	if (( $realhour == 0 )); then
+	    nomiMinuti[0]="%0 precisa"
 	fi
 
 	sub="%[0-9]"

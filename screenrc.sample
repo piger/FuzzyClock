@@ -1,0 +1,5 @@
+caption always "%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
+hardstatus alwayslastline
+hardstatus string '%H - %=%D %d %M %Y, %10`'
+
+backtick 10 	60	60		$HOME/bin/fuzzyclock.zsh

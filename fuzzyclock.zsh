@@ -13,6 +13,7 @@
 # in zsh il primo elemento di un array e' 1, con questa opzione
 # diventa 0, pero' cambia sintassi: $array[0] diventa ${array[0]}.
 setopt KSH_ARRAYS
+setopt extended_glob	# per pattern matching con backreference
 
 # CONFIGURAZIONE
 default_fuzzyness=1	# valori possibili: 1-4
@@ -99,8 +100,12 @@ fuzzyClock() {
 	    fi
 	fi
 
-	[[ ${nomiMinuti[$sector]} =~ "%[0-9]" ]]
-	delta=${MATCH:s/%//}
+	if [[ ${nomiMinuti[$sector]} = *%(#b)([0-9])* ]]; then
+	    delta=${match[0]}
+	else
+	    print "Missing time delta (%0 or %1) in time string \"${nomiMinuti[$sector]}\""
+	    exit 1
+	fi
 
 	if (( (($ore + $delta) % 12 ) > 0 )); then
 	    ((realhour = (ore + delta) % 12 - 1))

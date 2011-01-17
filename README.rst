@@ -28,19 +28,14 @@ Example translation in english language:
 
 Configurazione per tmux
 -----------------------
-Questa e' la configurazione per tmux; poi ci dovrei mettere lo screen: .. image:: images/file.png
 
 ::
 
-    # left status bar (256 colors)
-    set -g status-left "#[fg=colour202,bold]{#[default]#[fg=colour214,bold,bg=colour235]#S#[default]#[fg=colour202,bold]}#[default]"
-
     # right status bar (256 colors)
-    set -g status-right "#[fg=colour214,bold]#($HOME/bin/fuzzyclock.zsh)#[default]"
+    set -g status-right "#[fg=green,bold]#($HOME/bin/fuzzyclock.zsh)#[default]"
 
 Configurazione per screen
 -------------------------
-Configurazione blaa
 
 ::
 

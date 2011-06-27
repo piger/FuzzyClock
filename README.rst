@@ -3,7 +3,7 @@ FuzzyClock: Un orologio approssimativo e coatto in zsh
 ======================================================
 
 Questo script zsh_ mostra l'ora attuale *approssimata a parole* in dialetto
-romanaccio, ad esempio ``l'una meno cinque``; e' pensato per essere incluso
+romanaccio, ad esempio ``l'unnici evventi``; e' pensato per essere incluso
 nella configurazione di un terminal multiplexer come screen_ o tmux_ per
 sostituire la solita noiosa ora attuale con qualcosa di piu' simpatico.
 

@@ -31,8 +31,8 @@ Configurazione per tmux
 
 ::
 
-    # right status bar (256 colors)
-    set -g status-right "#[fg=green,bold]#($HOME/bin/fuzzyclock.zsh)#[default]"
+    # right status bar
+    set -g status-right "#($HOME/bin/fuzzyclock.zsh)"
 
 Configurazione per screen
 -------------------------
@@ -53,4 +53,4 @@ Public domain.
 .. _screen: http://www.gnu.org/software/screen/
 .. _tmux: http://tmux.sourceforge.net/
 .. _fuzzy-clock: http://code.google.com/p/fuzzy-clock/
-.. _FuzzyClock: http://www.objectpark.org/FuzzyClock.html
+.. _FuzzyClock: https://mschmidt.me/macos.html

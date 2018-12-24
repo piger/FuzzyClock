@@ -70,7 +70,8 @@ settimana=(
 )
 
 # MAIN()
-timearray=${(z)$(date +"%H %M %w")}
+local timearray ore minuti giorno sector
+timearray=(${(z)$(date +"%H %M %w")})
 ore=${timearray[0]}
 minuti=${timearray[1]}
 giorno=${timearray[2]}
